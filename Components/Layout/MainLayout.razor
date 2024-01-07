@@ -1,0 +1,84 @@
+﻿@using BisleriumCafe.Data.Model
+@using BisleriumCafe.Data.Service
+@using System.Diagnostics
+
+@inject NavigationManager NavManager
+
+@inherits LayoutComponentBase
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText  Style="font-weight: bold; font-size: 18px">Hello</MudText>
+        
+        <MudSpacer />
+        @if (_globalState.CurrentUser != null)
+        {
+            <MudStack Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center">
+                <MudTooltip Text="CurrentUser">
+                    <MudChip Icon="@Icons.Material.Filled.AccountCircle" Color="Color.Success">                
+                        <MudText Typo="Typo.body1">
+                            @_globalState.CurrentUser.UserName
+                        </MudText>                
+                    </MudChip>
+                </MudTooltip>
+
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Logout" Color="Color.Error" Size="Size.Small" Class="rounded-pill pl-4 pr-4" OnClick="@LogoutHandler">
+                    Log Out
+                </MudButton>
+
+                <SyncDataButton />
+                <DarkModeButton />
+                <LogoutButton />
+            </MudStack> 
+        }
+        else
+        {
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Login" Color="Color.Success"
+                       Size="Size.Small" Class="rounded-pill pl-4 pr-4" OnClick="@LoginHandler">
+                Log In
+            </MudButton>
+        }
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="@_drawerOpen">
+        <NavMenu />
+    </MudDrawer>
+
+    <MudMainContent Class="mx-14">
+        <CascadingValue Value="@_globalState">
+            @Body
+        </CascadingValue>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private GlobalState _globalState = new();
+
+    protected override void OnInitialized()
+    {
+        UserService.SeedUsers();
+    }
+
+    private void LogoutHandler()
+    {
+        Debug.WriteLine("Logout");
+        _globalState.CurrentUser = null;
+        NavManager.NavigateTo("/login");
+    }
+
+    private void LoginHandler()
+    {
+        NavManager.NavigateTo("/login");
+    }
+
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+}

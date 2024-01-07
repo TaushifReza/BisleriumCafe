@@ -1,0 +1,38 @@
+﻿@page "/login"
+
+@using Microsoft.AspNetCore.Components
+
+@inject Microsoft.AspNetCore.Components.NavigationManager NavManager;
+
+<div style="height: calc(100vh - 64px)" class="d-flex justify-center align-center">
+    <MudPaper Class="pa-6" Width="60vh">
+        <MudStack Class="mb-4" Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="2">
+            <MudIcon Icon="@Icons.Material.Filled.Coffee" Color="Color.Primary" Size="Size.Large" />
+            <MudText Color="Color.Primary" Typo="Typo.h4" Style="font-weight: bold">Bislerium Cafe</MudText>
+        </MudStack>
+        
+        <MudStack Class="mb-4" Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="2">
+            <MudText Color="Color.Dark" Style="font-weight: bold; font-size: medium">Login</MudText>
+        </MudStack>
+        
+        <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors" @onsubmit="LoginHandler">
+            @if (!string.IsNullOrEmpty(_errorMessage))
+            {
+                <MudAlert Severity="Severity.Error">@_errorMessage</MudAlert>
+            }
+            <MudTextField T="string" Label="Username" Required="true" RequiredError="User name is required!"
+                          @bind-Value="_userName"/>
+
+            <MudTextField T="string" Label="Password" InputType="InputType.Password" Required="true" 
+                          RequiredError="Password is required!" @bind-Value="_password"/>
+
+            <div class="d-flex align-center justify-space-between mt-4">
+                <MudButton Variant="Variant.Filled" Color="Color.Success" Class="ml-auto" ButtonType="ButtonType.Submit">Login</MudButton>
+            </div>
+        </MudForm>
+        
+        <div class="d-flex align-center justify-center mt-4">
+            <MudLink Href="/register">Don't Have Account ? Register</MudLink>
+        </div>
+    </MudPaper>
+</div>

@@ -1,0 +1,26 @@
+﻿@using BisleriumCafe.Data.Model
+<MudDrawerHeader Class="my-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+        <MudIcon Icon="@Icons.Material.Filled.Coffee" Color="Color.Primary" Size="Size.Large" />
+        <MudText Color="Color.Primary" Typo="Typo.h6" Style="font-weight: bold">Bislerium Cafe</MudText>
+    </MudStack>
+</MudDrawerHeader>
+
+<MudNavMenu Bordered="true" Margin="Margin.Normal">
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
+        Home
+    </MudNavLink>
+    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">
+        Counter
+    </MudNavLink>
+    <MudNavLink Href="weather" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Cloud">
+        Weather
+    </MudNavLink>
+    <MudNavLink Href="product" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.CoffeeMaker">
+        Product
+    </MudNavLink>
+</MudNavMenu>
+
+@code {
+    private GlobalState _globalState = new();
+}

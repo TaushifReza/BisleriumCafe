@@ -1,0 +1,44 @@
+﻿@page "/product"
+
+@inject IDialogService DialogService
+
+<h3>@coffee</h3>
+
+<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Success" Class="rounded-pill">
+    Add New Coffee
+</MudButton>
+
+<MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary">
+    Open Simple Dialog
+</MudButton>
+
+<MudDialog>
+    <DialogContent>
+        Dialog Content
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+<br/><br/>
+
+<table class="table table-success table-striped">
+    <thead>
+    <tr>
+        <th scope="col">ID</th>
+        <th scope="col">User Name</th>
+        <th scope="col">Password</th>
+        <th scope="col">Role</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th>1</th>
+        <td>Americono</td>
+        <td>Is Best</td>
+        <td>$ 200</td>
+    </tr>
+    </tbody>
+</table>

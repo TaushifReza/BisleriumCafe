@@ -1,0 +1,29 @@
+﻿@page "/"
+
+<h1>@Title Page</h1>
+
+@if (Users.Count > 0)
+{
+
+    <table class="table table-success table-striped">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">User Name</th>
+            <th scope="col">Password</th>
+            <th scope="col">Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Users)
+        {
+            <tr>
+                <th>@user.Id</th>
+                <td>@user.UserName</td>
+                <td>@user.Password</td>
+                <td>@user.Role</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
