@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics;
 using System.Text.Json;
-using System.Threading.Tasks;
 using BisleriumCafe.Data.Model;
 
 namespace BisleriumCafe.Data.Service
@@ -40,14 +35,18 @@ namespace BisleriumCafe.Data.Service
             return JsonSerializer.Deserialize<List<Coffee>>(json);
         }
 
-        public static void AddNewCoffee(string coffeeName, string coffeeDescription, int coffeePrice)
+        public static void AddNewCoffee(string coffeeName, string coffeeDescription, decimal coffeePrice)
         {
             List<Coffee> coffees = GetAllCoffees();
             bool coffeeNameExist = coffees.Any(x => x.coffeeName == coffeeName);
 
             if (coffeeNameExist)
             {
-                throw new Exception("Coffee Name Already Exist.");
+                throw new Exception("Coffee Name Already Exist!");
+            }
+            if (coffeePrice == 0 || coffeePrice <= 0 || coffeePrice == null)
+            {
+                throw new Exception("Invalid Coffee Price!");
             }
 
             coffees.Add(new Coffee
@@ -70,13 +69,30 @@ namespace BisleriumCafe.Data.Service
             List<Coffee> coffees = GetAllCoffees();
             Coffee coffee = coffees.FirstOrDefault(x =>  x.coffeeId == coffeeId);
 
-            if (coffee != null)
+            if (coffee == null)
             {
                 throw new Exception("Invalid Coffee ID.");
             }
 
             coffees.Remove(coffee);
             SaveAll(coffees);
+        }
+
+        public static void UpdateCoffee(Guid coffeeId, string coffeeName, string coffeeDescription, decimal coffeePrice)
+        {
+            List<Coffee> coffeeList = GetAllCoffees();
+            Coffee coffeeToUpdate = coffeeList.FirstOrDefault(x => x.coffeeId == coffeeId);
+
+            if (coffeeToUpdate == null)
+            {
+                throw new Exception("Coffee Not Found!");
+            }
+
+            //coffeeToUpdate.coffeeId = coffeeId;
+            coffeeToUpdate.coffeeName = coffeeName;
+            coffeeToUpdate.coffeeDescription = coffeeDescription;
+            coffeeToUpdate.coffeePrice = coffeePrice;
+            SaveAll(coffeeList);
         }
     }
 }

@@ -1,26 +1,47 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Diagnostics;
+using BisleriumCafe.Data.Model;
+using BisleriumCafe.Data.Service;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BisleriumCafe.Components.Pages
 {
     public partial class Product
     {
         private string coffee = "Coffee";
+        private List<Coffee> CoffeeList { get; set; }
 
-        [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+        protected override void OnInitialized()
+        {
+            CoffeeList = CoffeeService.GetCoffees();
+        }
+
+        private void OpenDialog()
+        {
+            var options = new DialogOptions { CloseOnEscapeKey = true };
+            DialogService.Show<AddNewCoffeeDialog>("Add New Coffee", options);
+        }
+
+        [CascadingParameter]
+        MudDialogInstance MudDialog { get; set; }
 
         void Submit() => MudDialog.Close(DialogResult.Ok(true));
         void Cancel() => MudDialog.Cancel();
 
-        private void OpenDialog()
+        public void DeleteCoffee(Guid coffeeId)
         {
-            var options = new DialogOptions { ClassBackground = "my-custom-class" };
-            DialogService.Show<DialogBlurryExample_Dialog>("Simple Dialog", options);
+            Debug.WriteLine(coffeeId);
+
+            Snackbar.Add("Coffee Deleted", Severity.Success);
+
+            /*CoffeeService.DeleteCoffee(coffeeId);
+            NavManager.NavigateTo(NavManager.Uri, true);*/
+        }
+
+        public void EditCoffeeOpenDialog(Coffee coffee)
+        {
+            var parameter = new DialogParameters<EditCoffeeDialog> { {x => x.coffee, coffee }, { x => x.ChangeState, StateHasChanged } };
+            DialogService.Show<EditCoffeeDialog>("Edit Coffee", parameter);
         }
     }
 }

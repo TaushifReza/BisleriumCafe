@@ -1,44 +1,55 @@
 ﻿@page "/product"
 
 @inject IDialogService DialogService
+@inject Microsoft.AspNetCore.Components.NavigationManager NavManager;
+@inject ISnackbar Snackbar;
 
 <h3>@coffee</h3>
 
-<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Success" Class="rounded-pill">
+<MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary" Class="rounded-pill" Icon="@Icons.Material.Filled.Add">
     Add New Coffee
 </MudButton>
 
-<MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary">
-    Open Simple Dialog
-</MudButton>
-
-<MudDialog>
-    <DialogContent>
-        Dialog Content
-    </DialogContent>
-    <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
-    </DialogActions>
-</MudDialog>
-
 <br/><br/>
 
-<table class="table table-success table-striped">
-    <thead>
-    <tr>
-        <th scope="col">ID</th>
-        <th scope="col">User Name</th>
-        <th scope="col">Password</th>
-        <th scope="col">Role</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <th>1</th>
-        <td>Americono</td>
-        <td>Is Best</td>
-        <td>$ 200</td>
-    </tr>
-    </tbody>
-</table>
+@if (CoffeeList.Count > 0)
+{
+    <table class="table table-success table-striped">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">User Name</th>
+            <th scope="col">Password</th>
+            <th scope="col">Role</th>
+            <th scope="col">Edit</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var coffee in CoffeeList)
+        {
+            <tr>
+                <th>@coffee.coffeeId</th>
+                <td>@coffee.coffeeName</td>
+                <td>@coffee.coffeeDescription</td>
+                <td>$@coffee.coffeePrice</td>
+                <td>
+                    <div style="display: flex;">
+                        <MudIconButton Color="Color.Success" Icon="@Icons.Material.Filled.Edit" aria-label="edit"
+                                           OnClick="@((e) => EditCoffeeOpenDialog(coffee))">
+                        </MudIconButton>
+                        <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" aria-label="delete" 
+                                       @onclick="() => DeleteCoffee(coffee.coffeeId)">
+                        </MudIconButton>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+<style>
+    .my-custom-class {
+        backdrop-filter: blur(10px);
+    }
+</style>
