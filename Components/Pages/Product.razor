@@ -5,10 +5,12 @@
 @inject ISnackbar Snackbar;
 
 <h3>@coffee</h3>
-
-<MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary" Class="rounded-pill" Icon="@Icons.Material.Filled.Add">
-    Add New Coffee
-</MudButton>
+@if (_globalState.CurrentUser != null && _globalState.CurrentUser.Role == "Admin")
+{
+    <MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary" Class="rounded-pill" Icon="@Icons.Material.Filled.Add">
+        Add New Coffee
+    </MudButton>
+}
 
 <br/><br/>
 
@@ -18,10 +20,13 @@
         <thead>
         <tr>
             <th scope="col">ID</th>
-            <th scope="col">User Name</th>
-            <th scope="col">Password</th>
-            <th scope="col">Role</th>
-            <th scope="col">Edit</th>
+            <th scope="col">Coffee Name</th>
+            <th scope="col">Coffee Description</th>
+            <th scope="col">Coffee Price</th>
+                @if (_globalState.CurrentUser is {Role: "Admin" })
+            {
+                    <th scope="col">Edit</th>
+            }
         </tr>
         </thead>
         <tbody>
@@ -32,16 +37,76 @@
                 <td>@coffee.coffeeName</td>
                 <td>@coffee.coffeeDescription</td>
                 <td>$@coffee.coffeePrice</td>
-                <td>
-                    <div style="display: flex;">
-                        <MudIconButton Color="Color.Success" Icon="@Icons.Material.Filled.Edit" aria-label="edit"
+                    @if (_globalState.CurrentUser is {Role: "Admin" })
+                {
+                    <td>
+                        <div style="display: flex;">
+                            <MudIconButton Color="Color.Success" Icon="@Icons.Material.Filled.Edit" aria-label="edit"
                                            OnClick="@((e) => EditCoffeeOpenDialog(coffee))">
-                        </MudIconButton>
-                        <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" aria-label="delete" 
-                                       @onclick="() => DeleteCoffee(coffee.coffeeId)">
-                        </MudIconButton>
-                    </div>
-                </td>
+                            </MudIconButton>
+                            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" aria-label="delete" 
+                                           @onclick="() => DeleteCoffee(coffee.coffeeId)">
+                            </MudIconButton>
+                        </div>
+                    </td>
+                }
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+<br />
+<br />
+
+<h3>AddIn</h3>
+
+@if (_globalState.CurrentUser != null && _globalState.CurrentUser.Role == "Admin")
+{
+    <MudButton @onclick="OpenAddNewAddInDialog" Variant="Variant.Filled" Color="Color.Primary" Class="rounded-pill"
+               Icon="@Icons.Material.Filled.Add">
+        Add New AddIn
+    </MudButton>
+}
+<br />
+<br />
+
+@if (AddInList.Count > 0)
+{
+    <table class="table table-success table-striped">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">AddIn Name</th>
+            <th scope="col">AddIn Description</th>
+            <th scope="col">AddIn Price</th>
+                @if (_globalState.CurrentUser != null && _globalState.CurrentUser.Role == "Admin")
+            {
+                <th scope="col">Edit</th>
+
+            }
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var addIn in AddInList)
+        {
+            <tr>
+                <th>@addIn.addInId</th>
+                <td>@addIn.addInName</td>
+                <td>@addIn.addInDescription</td>
+                <td>$@addIn.addInPrice</td>
+                    @if (_globalState.CurrentUser != null && _globalState.CurrentUser.Role == "Admin")
+                {
+                    <td>
+                        <div style="display: flex;">
+                            <MudIconButton Color="Color.Success" Icon="@Icons.Material.Filled.Edit" aria-label="edit"
+                                           OnClick="@((e) => EditAddInOpenDialog(addIn))">
+                            </MudIconButton>
+                            <MudIconButton Color="Color.Error" Icon="@Icons.Material.Filled.Delete" aria-label="delete" 
+                                           @onclick="() => DeleteAddIn(addIn.addInId)">
+                            </MudIconButton>
+                        </div>
+                    </td>
+                }
             </tr>
         }
         </tbody>

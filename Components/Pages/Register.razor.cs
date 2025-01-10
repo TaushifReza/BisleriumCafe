@@ -36,7 +36,7 @@ namespace BisleriumCafe.Components.Pages
 
         private string _addUserErrorMessage { get; set; }
 
-        public void AddUser()
+        public void AddNewUser()
         {
             try
             {
@@ -53,7 +53,7 @@ namespace BisleriumCafe.Components.Pages
 
                 _form.ResetAsync();
 
-                NavManager.NavigateTo("/");
+                NavManager.NavigateTo("/login");
             }
             catch (Exception e)
             {

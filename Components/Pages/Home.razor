@@ -4,26 +4,23 @@
 
 @if (Users.Count > 0)
 {
+    <MudTable Items="@UserRecord" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+        <HeaderContent>
+            <MudTh>ID</MudTh>
+            <MudTh>UserName</MudTh>
+            <MudTh>PasswordHashed</MudTh>
+            <MudTh>Role</MudTh>
+            <MudTh>NumberOfOrderCounter</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ID">@context.Id</MudTd>
+            <MudTd DataLabel="UserName">@context.UserName</MudTd>
+                <MudTd DataLabel="Password" HideSmall="_hidePosition">@context.Password</MudTd>
+            <MudTd DataLabel="Role">@context.Role</MudTd>
+            <MudTd DataLabel="NumberOfOrderCounter">@context.OrderCounter</MudTd>
+        </RowTemplate>
+    </MudTable>
 
-    <table class="table table-success table-striped">
-        <thead>
-        <tr>
-            <th scope="col">ID</th>
-            <th scope="col">User Name</th>
-            <th scope="col">Password</th>
-            <th scope="col">Role</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var user in Users)
-        {
-            <tr>
-                <th>@user.Id</th>
-                <td>@user.UserName</td>
-                <td>@user.Password</td>
-                <td>@user.Role</td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    <MudSwitch @bind-Checked="_hidePosition">Hide <b>position</b> when Breakpoint=Xs</MudSwitch>
+    <MudSwitch @bind-Checked="_loading">Show Loading</MudSwitch>
 }

@@ -1,0 +1,44 @@
+﻿@page "/order"
+
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<h3>@title</h3>
+
+<MudButton @onclick="OpenAddToCartDialog" Variant="Variant.Filled" Color="Color.Success" Class="rounded-pill"
+           Icon="@Icons.Material.Filled.Add">
+    Add New Order
+</MudButton>
+
+<MudButton @onclick="GeneratePdfTop5ReportForToday" Variant="Variant.Filled" Color="Color.Warning" Class="rounded-pill"
+           Icon="@Icons.Material.Filled.Add">
+    PDF Report of Today
+</MudButton>
+
+<MudButton @onclick="GeneratePdfReport" Variant="Variant.Filled" Color="Color.Warning" Class="rounded-pill"
+           Icon="@Icons.Material.Filled.Add">
+    PDF Report of Current Month
+</MudButton>
+
+<MudSelect T="string" Label="PDF of Month" @bind-Value="selectedMonth" AnchorOrigin="Origin.BottomCenter"
+           Class="mt-3" Width="60vh">
+    @foreach (var month in GetUniqueMonths())
+    {
+        <MudSelectItem Value="@month">@month</MudSelectItem>
+    }
+</MudSelect>
+
+<br />
+<br />
+
+<MudDataGrid Items="@OrderRecord">
+    <Columns>
+        <PropertyColumn Property="order => order.OrderRecordId" Title="Id" />
+        <PropertyColumn Property="order => order.CoffeeList[0].coffeeName" Title="Coffe Name"/>
+        <PropertyColumn Property="order => order.AddInList[0].addInName" Title="AddIn Name"/>
+        <PropertyColumn Property="order => order.CreateDateTime" Title="Date Time" />
+        <PropertyColumn Property="order => order.NetAmount" Title="Net Amount" />
+        <PropertyColumn Property="order => order.DiscountAmount" Title="Discount Amount" />
+        <PropertyColumn Property="order => order.TotalAmount" Title="Total Amount" />
+    </Columns>
+</MudDataGrid>

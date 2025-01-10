@@ -1,4 +1,5 @@
 ﻿@using BisleriumCafe.Data.Model
+@using System.Diagnostics
 <MudDrawerHeader Class="my-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
         <MudIcon Icon="@Icons.Material.Filled.Coffee" Color="Color.Primary" Size="Size.Large" />
@@ -10,17 +11,14 @@
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
         Home
     </MudNavLink>
-    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">
-        Counter
-    </MudNavLink>
-    <MudNavLink Href="weather" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Cloud">
-        Weather
-    </MudNavLink>
     <MudNavLink Href="product" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.CoffeeMaker">
         Product
+    </MudNavLink>
+    <MudNavLink Href="order" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.FileCopy">
+        Order
     </MudNavLink>
 </MudNavMenu>
 
 @code {
-    private GlobalState _globalState = new();
+    private GlobalState _globalState { get; set; } = new();
 }

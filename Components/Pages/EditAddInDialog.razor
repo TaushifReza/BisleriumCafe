@@ -1,0 +1,72 @@
+﻿@using BisleriumCafe.Data.Model
+@using System.Diagnostics
+@using BisleriumCafe.Data.Service
+
+@inject ISnackbar Snackbar;
+
+<MudDialog Style="width: 400px">
+    <DialogContent>
+        @if (!string.IsNullOrEmpty(_updateAddInErrorMessage))
+        {
+            <MudAlert Severity="Severity.Error">@_updateAddInErrorMessage</MudAlert>
+        }
+        <MudForm @onsubmit="UpdateAddIn">
+            <MudTextField T="Guid" Label="Coffee ID" ReadOnly="true" Value="@addIn.addInId"
+                          Variant="Variant.Outlined" />
+
+            <MudTextField T="string" Label="Coffee Name" Required="true"
+                          RequiredError="Coffee Name is required!" Variant="Variant.Outlined"
+                          @bind-Value="@addIn.addInName" />
+
+            <MudTextField T="string" Label="Coffee Description" Required="false" AutoGrow
+                           Variant="Variant.Outlined" @bind-Value="@addIn.addInDescription" />
+
+             <MudTextField T="decimal" Label="Coffee Price" Required="true"
+                           RequiredError="Coffee Price is required!" Adornment="Adornment.Start"
+                           AdornmentIcon="@Icons.Material.Filled.AttachMoney"
+                           AdornmentColor="Color.Warning" Variant="Variant.Outlined"
+                           @bind-Value="@addIn.addInPrice" InputType="InputType.Number" />
+
+             <div class="d-flex align-center justify-space-between mt-4">
+                 <MudButton Variant="Variant.Filled" Color="Color.Success" Class="ml-auto" ButtonType="ButtonType.Submit">
+                     Update
+                 </MudButton>
+             </div>
+         </MudForm>
+     </DialogContent>
+     <DialogActions>
+         <MudButton OnClick="Cancel">Cancel</MudButton>
+     </DialogActions>
+ </MudDialog>
+
+ @code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public AddIn addIn { get; set; } = new AddIn();
+
+    [Parameter] public Action ChangeState { get; set; }
+
+    private string _updateAddInErrorMessage { get; set; }
+
+    void Cancel() => MudDialog.Cancel();
+
+    void UpdateAddIn()
+    {
+        try
+        {
+            _updateAddInErrorMessage = "";
+            Debug.WriteLine("Edit");
+
+            AddInService.UpdateAddIn(addIn.addInId, addIn.addInName, addIn.addInDescription, addIn.addInPrice);
+
+            Snackbar.Add("AddIn Updated", Severity.Success);
+            ChangeState();
+            MudDialog.Close();
+        }
+        catch (Exception e)
+        {
+            _updateAddInErrorMessage = e.Message;
+        }
+    }
+}

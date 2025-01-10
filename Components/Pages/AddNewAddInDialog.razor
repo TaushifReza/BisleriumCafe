@@ -1,0 +1,76 @@
+﻿@using System.Diagnostics
+@using BisleriumCafe.Data.Service
+@inject Microsoft.AspNetCore.Components.NavigationManager NavManager;
+
+<MudDialog Style="width: 400px">
+    <DialogContent>
+        @if (!string.IsNullOrEmpty(_addAddInErrorMessage))
+        {
+            <MudAlert Severity="Severity.Error">@_addAddInErrorMessage</MudAlert>
+        }
+        <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors" @onsubmit="AddNewAddIn">
+            <MudTextField T="string" Label="AddIn Name" Required="true" RequiredError="AddIn Name is required!"
+                          @bind-Value="_addInName" Variant="Variant.Text"/>
+
+            <MudTextField T="string" Label="AddIn Description" Required="false" @bind-Value="_addInDescription"
+                                AutoGrow Variant="Variant.Text" />
+
+            <MudTextField T="decimal" Label="AddIn Price" Required="true" RequiredError="AddIn Price is required!"
+                          @bind-Value="_addInPrice" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.AttachMoney" AdornmentColor="Color.Warning"
+                           Variant="Variant.Text" InputType="InputType.Number" />
+
+            <div class="d-flex align-center justify-space-between mt-4">
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.ResetAsync())" Class="mx-2" Icon="@Icons.Material.Filled.ResetTv">Reset</MudButton>
+
+                <MudButton Variant="Variant.Filled" Color="Color.Success" Disabled="@(!_success)" Class="ml-auto" ButtonType="ButtonType.Submit" Icon="@Icons.Material.Filled.Add">
+                    Add
+                </MudButton>
+            </div>
+        </MudForm>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Action ChangeState { get; set; }
+
+    private bool _success;
+    private string[] _errors = { };
+    MudForm _form;
+    private string _addInName { get; set; }
+    private string _addInDescription { get; set; }
+    private decimal _addInPrice { get; set; }
+    private string _addAddInErrorMessage { get; set; }
+
+    void Cancel() => MudDialog.Cancel();
+
+    protected void AddNewAddIn()
+    {
+        try
+        {
+            Debug.WriteLine("Add New AddIn");
+            _addAddInErrorMessage = "";
+
+            AddInService.AddNewAddIn(_addInName, _addInDescription, _addInPrice);
+
+            ChangeState();
+
+            Debug.WriteLine("State");
+            MudDialog.Close();
+            //OnInitialized();
+            NavManager.NavigateTo("order");
+            OnInitialized();
+            NavManager.NavigateTo("/product");
+        }
+        catch (Exception e)
+        {
+            _addAddInErrorMessage = e.Message;
+        }
+    } 
+}

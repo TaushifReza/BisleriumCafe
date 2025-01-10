@@ -9,9 +9,14 @@ namespace BisleriumCafe.Components.Pages
 
         public string Title = "Home";
 
+        private bool _hidePosition;
+        private bool _loading;
+        private IEnumerable<User> UserRecord = new List<User>();
+
         protected override void OnInitialized()
         {
             Users = UserService.GetUsers();
+            UserRecord = UserService.GetUsers();
         }
     }
 }

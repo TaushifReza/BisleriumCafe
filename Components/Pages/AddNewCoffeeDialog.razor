@@ -60,8 +60,10 @@
             Debug.WriteLine("AddNewCoffee OK");
 
             _form.ResetAsync();
-            NavManager.NavigateTo("/product");
             MudDialog.Close();
+            NavManager.NavigateTo("order");
+            OnInitialized();
+            NavManager.NavigateTo("/product");
         }
         catch(Exception e)
         {

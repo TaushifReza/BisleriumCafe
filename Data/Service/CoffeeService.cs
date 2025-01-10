@@ -94,5 +94,13 @@ namespace BisleriumCafe.Data.Service
             coffeeToUpdate.coffeePrice = coffeePrice;
             SaveAll(coffeeList);
         }
+
+        public static Coffee GetCoffeeByCoffeeName(string coffeeName)
+        {
+            List<Coffee> coffeeList = GetCoffees();
+            Coffee coffee = coffeeList.FirstOrDefault(x => x.coffeeName == coffeeName);
+
+            return coffee;
+        }
     }
 }

@@ -11,7 +11,11 @@
 
 <MudLayout>
     <MudAppBar>
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        @if (_globalState.CurrentUser != null)
+        {
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start"
+                           OnClick="@((e) => DrawerToggle())" />
+        }
         <MudText  Style="font-weight: bold; font-size: 18px">Hello</MudText>
         
         <MudSpacer />
@@ -29,26 +33,23 @@
                 <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Logout" Color="Color.Error" Size="Size.Small" Class="rounded-pill pl-4 pr-4" OnClick="@LogoutHandler">
                     Log Out
                 </MudButton>
-
-                <SyncDataButton />
-                <DarkModeButton />
-                <LogoutButton />
             </MudStack> 
         }
         else
         {
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Login" Color="Color.Success"
+            
+            @*<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Login" Color="Color.Success"
                        Size="Size.Small" Class="rounded-pill pl-4 pr-4" OnClick="@LoginHandler">
                 Log In
-            </MudButton>
+            </MudButton>*@
         }
     </MudAppBar>
 
-    <MudDrawer @bind-Open="@_drawerOpen">
+    <MudDrawer @bind-Open="@_drawerOpen" Style="margin-top: -50px; height: 700px;">
         <NavMenu />
     </MudDrawer>
 
-    <MudMainContent Class="mx-14">
+    <MudMainContent Class="mt-8 px-8" MaxWidth="MaxWidth.False">
         <CascadingValue Value="@_globalState">
             @Body
         </CascadingValue>
@@ -61,6 +62,11 @@
     protected override void OnInitialized()
     {
         UserService.SeedUsers();
+        LogoutHandler();
+    /*if (_globalState.CurrentUser == null)
+        {
+            NavManager.NavigateTo("/login");
+        }*/
     }
 
     private void LogoutHandler()
@@ -75,7 +81,7 @@
         NavManager.NavigateTo("/login");
     }
 
-    bool _drawerOpen = true;
+    bool _drawerOpen = false;
 
     void DrawerToggle()
     {

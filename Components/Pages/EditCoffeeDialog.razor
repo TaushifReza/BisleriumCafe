@@ -11,18 +11,21 @@
             <MudAlert Severity="Severity.Error">@_updateCoffeeErrorMessage</MudAlert>
         }
         <MudForm @onsubmit="UpdateCoffee">
-            <MudTextField T="Guid" Label="Coffee ID" ReadOnly="true" Value="@coffee.coffeeId" Variant="Variant.Outlined"/>
+            <MudTextField T="Guid" Label="Coffee ID" ReadOnly="true" Value="@coffee.coffeeId"
+                          Variant="Variant.Outlined"/>
 
-            <MudTextField T="string" Label="Coffee Name" Required="true" RequiredError="Coffee Name is required!"
-                          Variant="Variant.Outlined" @bind-Value="@coffee.coffeeName"/>
+            <MudTextField T="string" Label="Coffee Name" Required="true" 
+                          RequiredError="Coffee Name is required!" Variant="Variant.Outlined"
+                          @bind-Value="@coffee.coffeeName"/>
 
             <MudTextField T="string" Label="Coffee Description" Required="false" AutoGrow
-                           Variant="Variant.Outlined" @bind-Value="@coffee.coffeeDescription" />
+                          Variant="Variant.Outlined" @bind-Value="@coffee.coffeeDescription" />
 
-            <MudTextField T="decimal" Label="Coffee Price" Required="true" RequiredError="Coffee Price is required!"
-                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.AttachMoney"
+            <MudTextField T="decimal" Label="Coffee Price" Required="true"
+                          RequiredError="Coffee Price is required!" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Filled.AttachMoney"
                           AdornmentColor="Color.Warning" Variant="Variant.Outlined"
-                           @bind-Value="@coffee.coffeePrice" InputType="InputType.Number"/>
+                          @bind-Value="@coffee.coffeePrice" InputType="InputType.Number"/>
 
             <div class="d-flex align-center justify-space-between mt-4">
                 <MudButton Variant="Variant.Filled" Color="Color.Success" Class="ml-auto" ButtonType="ButtonType.Submit">
@@ -44,13 +47,6 @@
 
     [Parameter] public Action ChangeState { get; set; }
 
-    public Coffee updateCoffee { get; set; } = new Coffee();
-
-    public string ReadOnly { get; set; }
-    private Guid _coffeeId { get; set; }
-    private string _coffeeName { get; set; }
-    private string _coffeeDescription { get; set; }
-    private decimal _coffeePrice { get; set; }
     private string _updateCoffeeErrorMessage { get; set; }
 
     void Cancel() => MudDialog.Cancel();
@@ -62,17 +58,12 @@
             _updateCoffeeErrorMessage = "";
             Debug.WriteLine("Edit");
 
-            Debug.WriteLine(coffee.coffeeName);
-            Debug.WriteLine(coffee.coffeeDescription);
-
-            
-
-           // CoffeeService.UpdateCoffee(coffee.coffeeId, coffee.coffeeName, coffee.coffeeDescription, coffee.coffeePrice);
+            CoffeeService.UpdateCoffee(coffee.coffeeId, coffee.coffeeName, coffee.coffeeDescription, 
+                coffee.coffeePrice);
 
             Snackbar.Add("Coffee Updated", Severity.Success);
             ChangeState();
             MudDialog.Close();
-
         }
         catch (Exception e)
         {

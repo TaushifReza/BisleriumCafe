@@ -15,7 +15,7 @@
             <MudText Color="Color.Dark" Style="font-weight: bold; font-size: medium">Register User</MudText>
         </MudStack>
 
-        <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors" @onsubmit="AddUser">
+        <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors" @onsubmit="AddNewUser">
             @if (!string.IsNullOrEmpty(_addUserErrorMessage))
             {
                 <MudAlert Severity="Severity.Error">@_addUserErrorMessage</MudAlert>

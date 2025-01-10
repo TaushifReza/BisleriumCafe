@@ -1,0 +1,94 @@
+﻿@using BisleriumCafe.Data.Model
+@using System.Diagnostics
+@using BisleriumCafe.Data.Service
+
+@inject Microsoft.AspNetCore.Components.NavigationManager NavManager;
+
+<MudDialog Style="width: 400px;">
+    <DialogContent>
+        <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors" @onsubmit="AddNewOrderRecord">
+            @if (!string.IsNullOrEmpty(_userNameErrorMsg))
+            {
+                <MudAlert Severity="Severity.Error">@_userNameErrorMsg</MudAlert>
+            }
+            <MudSelect Dense="true" T="string" Label="Coffee" Variant="Variant.Text" @bind-Value="_coffeeName"
+                       Required="true" RequiredError="Coffee is Required">
+                @foreach (var coffee in CoffeeList)
+                {
+                    <MudSelectItem Value="@(coffee.coffeeName)"/>
+                }
+            </MudSelect>
+            <MudSelect Dense="true" T="string" Label="AddIn" Variant="Variant.Text" @bind-Value="_addInName">
+                @foreach (var addIn in AddInList)
+                {
+                    <MudSelectItem Value="@(addIn.addInName)"/>
+                }
+            </MudSelect>
+            <MudTextField T="string" Label="Customer Name" Required="true" RequiredError="Customer Name is required!"
+                          Variant="Variant.Text" @bind-Value="_customerName"/>
+
+            <div class="d-flex align-center justify-space-between mt-4">
+                <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.ResetAsync())" Class="mx-2" Icon="@Icons.Material.Filled.ResetTv">Reset</MudButton>
+
+                <MudButton Variant="Variant.Filled" Color="Color.Success" Disabled="@(!_success)" Class="ml-auto" ButtonType="ButtonType.Submit" Icon="@Icons.Material.Filled.Add">
+                    Add
+                </MudButton>
+            </div>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public List<OrderRecord> _orderRecords { get; set; }
+
+    private bool _success;
+    private string[] _errors = { };
+    MudForm _form;
+    private string _coffeeName { get; set; }
+    private string _addInName { get; set; }
+    private string _customerName { get; set; }
+    private List<Coffee> CoffeeList { get; set; }
+    private List<AddIn> AddInList { get; set; }
+    public string _userNameErrorMsg { get; set; }
+
+    protected override void OnInitialized()
+    {
+        CoffeeList = CoffeeService.GetCoffees();
+        AddInList = AddInService.GetAddIns();
+    }
+
+    void Cancel() => MudDialog.Cancel();
+
+    public void AddNewOrderRecord()
+    {
+        try
+        {
+            Coffee cofeeOrder = CoffeeService.GetCoffeeByCoffeeName(_coffeeName);
+            AddIn addInOrder = null;
+            if (!string.IsNullOrEmpty(_addInName))
+            {
+                addInOrder = AddInService.GetAddInByAddInName(_addInName);
+            }
+            User user = UserService.GetUserByUserName(_customerName);
+
+            OrderRecordService.AddNewOrderRecord(new List<Coffee> { cofeeOrder }, 
+                AddInList = addInOrder != null ? new List<AddIn> { addInOrder } : new List<AddIn>(), user);
+
+            MudDialog.Close();
+            NavManager.NavigateTo("/product");
+            OnInitialized();
+            NavManager.NavigateTo("/order");
+
+        }
+        catch (Exception e)
+        {
+            _userNameErrorMsg = e.Message;
+        }
+    }
+
+}
